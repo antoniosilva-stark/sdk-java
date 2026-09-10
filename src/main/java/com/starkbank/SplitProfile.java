@@ -32,6 +32,7 @@ import java.util.List;
  * delay [Integer]: How long the amount will stay at the workspace, in milliseconds. Example: 604800
  * tags [List<String>], optional: 
  * status [String]: Current SplitProfile status. Example: 'created'
+ * externalId [String], optional: Unique id provided by the user to avoid duplicates
  * created [String]: Creation timestamp
  * updated [String]: Latest update timestamp
  *
@@ -43,16 +44,18 @@ public class SplitProfile extends Resource {
     public Integer delay;
     public List<String> tags;
     public String status;
+    public String externalId;
     public String created;
     public String updated;
 
 
-    public SplitProfile(String interval, Integer delay, List<String> tags, String status, String created, String updated) {
+    public SplitProfile(String interval, Integer delay, List<String> tags, String status, String externalId, String created, String updated) {
         super(null);
         this.interval = interval;
         this.delay = delay;
         this.tags = tags;
         this.status = status;
+        this.externalId = externalId;
         this.created = created;
         this.updated = updated;
     }
@@ -65,6 +68,7 @@ public class SplitProfile extends Resource {
         this.delay = (Integer) dataCopy.remove("delay");
         this.tags = (List<String>) dataCopy.remove("tags");
         this.status = (String) dataCopy.remove("status");
+        this.externalId = (String) dataCopy.remove("externalId");
         this.created = (String) dataCopy.remove("created");
         this.updated = (String) dataCopy.remove("updated");
 
