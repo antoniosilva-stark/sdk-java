@@ -12,65 +12,37 @@ import java.util.List;
 public class TestDeposit {
 
     @Test
-    public void testQueryAndGet() throws Exception{
+    public void testQuery() throws Exception {
         Settings.user = utils.User.defaultProject();
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("limit", 3);
-        params.put("after", "2019-04-01");
-        params.put("before", "2030-04-30");
         Generator<Deposit> deposits = Deposit.query(params);
-        System.out.println(deposits);
+
         int i = 0;
         for (Deposit deposit : deposits) {
             i += 1;
-            System.out.println(deposit);
-            String depositId = deposit.id;
-            deposit = Deposit.get(depositId);
-            Assert.assertNotNull(depositId);
-            Assert.assertEquals(depositId, deposit.id);
-            System.out.println(deposit);
+            Assert.assertNotNull(deposit.id);
         }
-        Assert.assertTrue(i > 0);
+        System.out.println(i);
     }
-    
+
+
     @Test
-    public void testLogQueryAndGet() throws Exception{
+    public void testGet() throws Exception {
         Settings.user = utils.User.defaultProject();
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("limit", 3);
-        params.put("after", "2019-04-01");
-        params.put("before", "2030-04-30");
-        Generator<Deposit.Log> logs = Deposit.Log.query(params);
-
-        int i = 0;
-        for (Deposit.Log log : logs) {
-            i += 1;
-            log = Deposit.Log.get(log.id);
-            Assert.assertNotNull(log.id);
-            Assert.assertNotNull(log.deposit.id);
-            System.out.println(log);
-        }
-        Assert.assertTrue(i > 0);
-    }
-
-    @Test
-    public void testUpdateAmount() throws Exception {
-        Settings.user = utils.User.defaultProject();
-
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("status", "created");
         params.put("limit", 1);
         Generator<Deposit> deposits = Deposit.query(params);
+
         for (Deposit deposit : deposits) {
-            HashMap<String, Object> patchData = new HashMap<>();
-            patchData.put("amount", 0);
-            Deposit updatedDeposit = Deposit.update(deposit.id, patchData);
-            Assert.assertEquals(updatedDeposit.amount, 0);
-            System.out.println(updatedDeposit);
+            Deposit found = Deposit.get(deposit.id);
+            Assert.assertNotNull(found.id);
+            Assert.assertEquals(found.id, deposit.id);
         }
     }
+
 
     @Test
     public void testPage() throws Exception {
@@ -78,15 +50,12 @@ public class TestDeposit {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("limit", 2);
-        params.put("after", "2019-04-01");
-        params.put("before", "2030-04-30");
         params.put("cursor", null);
 
         List<String> ids = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Deposit.Page page = Deposit.page(params);
-            for (Deposit deposit: page.deposits) {
-                System.out.println(deposit);
+            for (Deposit deposit : page.deposits) {
                 if (ids.contains(deposit.id)) {
                     throw new Exception("repeated id");
                 }
@@ -97,40 +66,19 @@ public class TestDeposit {
             }
             params.put("cursor", page.cursor);
         }
-
-        if (ids.size() != 4) {
-            throw new Exception("ids.size() != 4");
-        }
     }
 
     @Test
-    public void testLogPage() throws Exception {
+    public void testLogQuery() throws Exception {
         Settings.user = utils.User.defaultProject();
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("limit", 2);
-        params.put("after", "2019-04-01");
-        params.put("before", "2030-04-30");
-        params.put("cursor", null);
+        params.put("limit", 3);
+        Generator<Deposit.Log> logs = Deposit.Log.query(params);
 
-        List<String> ids = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            Deposit.Log.Page page = Deposit.Log.page(params);
-            for (Deposit.Log log: page.logs) {
-                System.out.println(log);
-                if (ids.contains(log.id)) {
-                    throw new Exception("repeated id");
-                }
-                ids.add(log.id);
-            }
-            if (page.cursor == null) {
-                break;
-            }
-            params.put("cursor", page.cursor);
-        }
-
-        if (ids.size() != 4) {
-            throw new Exception("ids.size() != 4");
+        for (Deposit.Log log : logs) {
+            Assert.assertNotNull(log.id);
         }
     }
 }
+

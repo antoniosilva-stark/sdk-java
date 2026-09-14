@@ -1,81 +1,58 @@
 package com.starkbank;
 
-import com.starkbank.utils.Generator;
-import com.starkbank.utils.Resource;
-import com.starkbank.utils.Rest;
-import com.starkcore.utils.SubResource;
 
+import com.starkbank.utils.Rest;
+import com.starkbank.utils.Resource;
+import com.starkbank.utils.Generator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class Deposit extends Resource {
-    /**
-     * Deposit object
-     * <p>
-     * Deposits represent passive cash-in received by your account from external transfers
-     * <p>
-     * Parameters:
-     * id [string]: unique id associated with a Deposit when it is created. ex: "5656565656565656"
-     * name [string]: payer name. ex: "Iron Bank S.A."
-     * taxId [string]: payer tax ID (CPF or CNPJ). ex: "012.345.678-90" or "20.018.183/0001-80"
-     * bankCode [string]: payer bank code in Brazil. ex: "20018183" or "341"
-     * branchCode [string]: payer bank account branch. ex: "1357-9"
-     * accountNumber [string]: payer bank account number. ex: "876543-2"
-     * accountType [string]: payer bank account type. ex: "checking"
-     * amount [long]: Deposit value in cents. ex: 1234 (= R$ 12.34)
-     * type [string]: type of settlement that originated the deposit. ex: "pix" or "ted"
-     * status [string]: current Deposit status. ex: "created"
-     * tags [list of strings]: list of strings that are tagging the deposit. ex: ["reconciliationId", "txId"]
-     * fee [integer]: fee charged when a deposit is created. ex: 50 (= R$ 0.50)
-     * transactionIds [list of strings]: ledger transaction ids linked to this deposit (if there are more than one, all but the first are reversals or failed reversal chargebacks). ex: ["19827356981273"]
-     * created [string]: creation datetime for the Deposit. ex: "2020-03-10 10:30:00.000000+00:00"
-     * updated [string]: latest update datetime for the Deposit. ex: "2020-03-10 10:30:00.000000+00:00"
-     */
+/**
+ * Deposit object
+ * <p>
+ * Deposits represent passive cash-in received by your account from external transfers
+ * <p>
+ * Parameters:
+ * id [String]: unique id associated with a Deposit when it is created. ex: \"5656565656565656\"
+ * name [String]: payer name. ex: \"Iron Bank S.A.\"
+ * taxId [String]: payer tax ID (CPF or CNPJ). ex: \"012.345.678-90\" or \"20.018.183/0001-80\"
+ * bankCode [String]: payer bank code in Brazil. ex: \"20018183\" or \"341\"
+ * branchCode [String]: payer bank account branch. ex: \"1357-9\"
+ * accountNumber [String]: payer bank account number. ex: \"876543-2\"
+ * accountType [String]: payer bank account type. ex: \"checking\"
+ * amount [Long]: Deposit value in cents. ex: 1234 (= R$ 12.34)
+ * type [String]: Type of settlement that originated the deposit. ex: \"pix\" or \"ted\"
+ * status [String]: current Deposit status. ex: \"created\"
+ * tags [List<String>]: 
+ * fee [Integer]: fee charged by this deposit. ex: 50 (= R$ 0.50)
+ * transactionIds [List<String>]: 
+ * created [String]: creation datetime for the Deposit. ex: datetime.datetime(2020, 12, 10, 10, 30, 0, 0)
+ * updated [String]: latest update datetime for the Deposit. ex: datetime.datetime(2020, 12, 10, 10, 30, 0, 0)
+ *
+ */
+public class Deposit extends Resource {
     static ClassData data = new ClassData(Deposit.class, "Deposit");
-    
+
     public String name;
     public String taxId;
     public String bankCode;
     public String branchCode;
     public String accountNumber;
     public String accountType;
-    public long amount;
+    public Long amount;
     public String type;
     public String status;
-    public String[] tags;
+    public List<String> tags;
     public Integer fee;
-    public String[] transactionIds;
+    public List<String> transactionIds;
     public String created;
     public String updated;
-    
-    /**
-     * Deposit object
-     * <p>
-     * Deposits represent passive cash-in received by your account from external transfers
-     * <p>
-     * Parameters:
-     * @param id [string]: unique id associated with a Deposit when it is created. ex: "5656565656565656"
-     * @param name [string]: payer name. ex: "Iron Bank S.A."
-     * @param taxId [string]: payer tax ID (CPF or CNPJ). ex: "012.345.678-90" or "20.018.183/0001-80"
-     * @param bankCode [string]: payer bank code in Brazil. ex: "20018183" or "341"
-     * @param branchCode [string]: payer bank account branch. ex: "1357-9"
-     * @param accountNumber [string]: payer bank account number. ex: "876543-2"
-     * @param accountType [string]: payer bank account type. ex: "checking"
-     * @param amount [long]: Deposit value in cents. ex: 1234 (= R$ 12.34)
-     * @param type [string]: type of settlement that originated the deposit. ex: "pix" or "ted"
-     * @param status [string]: current Deposit status. ex: "created"
-     * @param tags [list of strings]: list of strings that are tagging the deposit. ex: ["reconciliationId", "taxId"]
-     * @param fee [integer]: fee charged when a deposit is created. ex: 50 (= R$ 0.50)
-     * @param transactionIds [list of strings]: ledger transaction ids linked to this deposit (if there are more than one, all but the first are reversals or failed reversal chargebacks). ex: ["19827356981273"]
-     * @param created [string]: creation datetime for the Deposit. ex: "2020-03-10 10:30:00.000000+00:00"
-     * @param updated [string]: latest update datetime for the Deposit. ex: "2020-03-10 10:30:00.000000+00:00"
-     */
-    public Deposit(String id, String name, String taxId, String bankCode, String branchCode, String accountNumber,
-                   String accountType, long amount, String type, String status, String[] tags, Integer fee, String[] transactionIds,
-                   String created, String updated) {
-        super(id);
+
+
+    public Deposit(String name, String taxId, String bankCode, String branchCode, String accountNumber, String accountType, Long amount, String type, String status, List<String> tags, Integer fee, List<String> transactionIds, String created, String updated) {
+        super(null);
         this.name = name;
         this.taxId = taxId;
         this.bankCode = bankCode;
@@ -92,10 +69,34 @@ public final class Deposit extends Resource {
         this.updated = updated;
     }
 
-    public Deposit(){
+    @SuppressWarnings("unchecked")
+    public Deposit(Map<String, Object> data) throws Exception {
+        super(null);
+        HashMap<String, Object> dataCopy = new HashMap<>(data);
+        this.name = (String) dataCopy.remove("name");
+        this.taxId = (String) dataCopy.remove("taxId");
+        this.bankCode = (String) dataCopy.remove("bankCode");
+        this.branchCode = (String) dataCopy.remove("branchCode");
+        this.accountNumber = (String) dataCopy.remove("accountNumber");
+        this.accountType = (String) dataCopy.remove("accountType");
+        this.amount = (Long) dataCopy.remove("amount");
+        this.type = (String) dataCopy.remove("type");
+        this.status = (String) dataCopy.remove("status");
+        this.tags = (List<String>) dataCopy.remove("tags");
+        this.fee = (Integer) dataCopy.remove("fee");
+        this.transactionIds = (List<String>) dataCopy.remove("transactionIds");
+        this.created = (String) dataCopy.remove("created");
+        this.updated = (String) dataCopy.remove("updated");
+
+        if (!dataCopy.isEmpty()) {
+            throw new Exception("Unknown parameters used in constructor: [" + String.join(", ", dataCopy.keySet()) + "]");
+        }
+    }
+
+    public Deposit() {
         super(null);
     }
-    
+
     /**
      * Retrieve a specific Deposit
      * <p>
@@ -103,9 +104,10 @@ public final class Deposit extends Resource {
      * <p>
      * Parameters:
      * @param id [string]: object unique id. ex: "5656565656565656"
+     * <p>
      * Return:
      * @return Deposit object with updated attributes
-     * @throws Exception error in the request 
+     * @throws Exception error in the request
      */
     public static Deposit get(String id) throws Exception {
         return Deposit.get(id, null);
@@ -118,11 +120,11 @@ public final class Deposit extends Resource {
      * <p>
      * Parameters:
      * @param id [string]: object unique id. ex: "5656565656565656"
-     * Parameters:
      * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
+     * <p>
      * Return:
      * @return Deposit object with updated attributes
-     * @throws Exception error in the request 
+     * @throws Exception error in the request
      */
     public static Deposit get(String id, User user) throws Exception {
         return Rest.getId(data, id, user);
@@ -134,77 +136,64 @@ public final class Deposit extends Resource {
      * Receive a generator of Deposit objects previously created in the Stark Bank API.
      * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
      * <p>
+     * Return:
+     * @return generator of Deposit objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<Deposit> query() throws Exception {
+        return Deposit.query(new HashMap<>(), null);
+    }
+
+    /**
+     * Retrieve Deposits
+     * <p>
+     * Receive a generator of Deposit objects previously created in the Stark Bank API.
+     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
+     * <p>
      * Parameters:
-     * @param params map of parameters
-     * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
-     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-     * status [string, default null]: filter for status of retrieved objects. ex: "paid" or "registered"
-     * sort [string, default "-created"]: sort order considered in response. Valid options are "created" or "-created".
-     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
-     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
-     * @param user [Project object, default null]: Project object. Not necessary if StarkBank.Settings.user was set before function call
+     * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
      * <p>
      * Return:
      * @return generator of Deposit objects with updated attributes
-     * @throws Exception error in the request 
+     * @throws Exception error in the request
+     */
+    public static Generator<Deposit> query(User user) throws Exception {
+        return Deposit.query(new HashMap<>(), user);
+    }
+
+    /**
+     * Retrieve Deposits
+     * <p>
+     * Receive a generator of Deposit objects previously created in the Stark Bank API.
+     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
+     * <p>
+     * Parameters:
+     * @param params map of parameters for the query
+     * <p>
+     * Return:
+     * @return generator of Deposit objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<Deposit> query(Map<String, Object> params) throws Exception {
+        return Deposit.query(params, null);
+    }
+
+    /**
+     * Retrieve Deposits
+     * <p>
+     * Receive a generator of Deposit objects previously created in the Stark Bank API.
+     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
+     * <p>
+     * Parameters:
+     * @param params map of parameters for the query
+     * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
+     * <p>
+     * Return:
+     * @return generator of Deposit objects with updated attributes
+     * @throws Exception error in the request
      */
     public static Generator<Deposit> query(Map<String, Object> params, User user) throws Exception {
         return Rest.getStream(data, params, user);
-    }
-
-    /**
-     * Retrieve Deposits
-     * <p>
-     * Receive a generator of Deposit objects previously created in the Stark Bank API.
-     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-     * <p>
-     * Parameters:
-     * @param params map of parameters
-     * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
-     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-     * status [string, default null]: filter for status of retrieved objects. ex: "paid" or "registered"
-     * sort [string, default "-created"]: sort order considered in response. Valid options are "created" or "-created".
-     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
-     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
-     * <p>
-     * Return:
-     * @return generator of Deposit objects with updated attributes
-     * @throws Exception error in the request 
-     */
-    public static Generator<Deposit> query(Map<String, Object> params) throws Exception {
-        return Rest.getStream(data, params, null);
-    }
-
-    /**
-     * Retrieve Deposits
-     * <p>
-     * Receive a generator of Deposit objects previously created in the Stark Bank API.
-     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-     * <p>
-     * Parameters:
-     * @param user [Project object, default null]: Project object. Not necessary if StarkBank.Settings.user was set before function call
-     * <p>
-     * Return:
-     * @return generator of Deposit objects with updated attributes
-     * @throws Exception error in the request 
-     */
-    public static Generator<Deposit> query(User user) throws Exception {
-        return Rest.getStream(data, new HashMap<>(), user);
-    }
-
-    /**
-     * Retrieve Deposits
-     * <p>
-     * Receive a generator of Deposit objects previously created in the Stark Bank API.
-     * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-     * Return:
-     * @return generator of Deposit objects with updated attributes
-     * @throws Exception error in the request 
-     */
-    public static Generator<Deposit> query() throws Exception {
-        return Rest.getStream(data, new HashMap<>(), null);
     }
 
     public final static class Page {
@@ -223,60 +212,29 @@ public final class Deposit extends Resource {
      * Receive a list of up to 100 Deposit objects previously created in the Stark Bank API and the cursor to the next page.
      * Use this function instead of query if you want to manually page your requests.
      * <p>
-     * Parameters:
-     * @param params parameters of the query
-     * cursor [string, default null]: cursor returned on the previous page function call
-     * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
-     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-     * status [string, default null]: filter for status of retrieved objects. ex: "paid" or "registered"
-     * sort [string, default "-created"]: sort order considered in response. Valid options are "created" or "-created".
-     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
-     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
-     * <p>
      * Return:
-     * @return Deposit.Page object:
-     * Deposit.Page.deposits: list of Deposit objects with updated attributes
-     * Deposit.Page.cursor: cursor to retrieve the next page of Deposit objects
-     * @throws Exception error in the request
-     */
-    public static Page page(Map<String, Object> params) throws Exception {
-        return page(params, null);
-    }
-
-    /**
-     * Retrieve paged Deposits
-     * <p>
-     * Receive a list of up to 100 Deposit objects previously created in the Stark Bank API and the cursor to the next page.
-     * Use this function instead of query if you want to manually page your requests.
-     * <p>
-     * Parameters:
-     * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
-     * <p>
-     * Return:
-     * @return Deposit.Page object:
-     * Deposit.Page.deposits: list of Deposit objects with updated attributes
-     * Deposit.Page.cursor: cursor to retrieve the next page of Deposit objects
-     * @throws Exception error in the request
-     */
-    public static Page page(User user) throws Exception {
-        return page(new HashMap<>(), user);
-    }
-
-    /**
-     * Retrieve paged Deposits
-     * <p>
-     * Receive a list of up to 100 Deposit objects previously created in the Stark Bank API and the cursor to the next page.
-     * Use this function instead of query if you want to manually page your requests.
-     * <p>
-     * Return:
-     * @return Deposit.Page object:
-     * Deposit.Page.deposits: list of Deposit objects with updated attributes
-     * Deposit.Page.cursor: cursor to retrieve the next page of Deposit objects
+     * @return Deposit.Page object with deposits list and cursor
      * @throws Exception error in the request
      */
     public static Page page() throws Exception {
-        return page(new HashMap<>(), null);
+        return Deposit.page(new HashMap<>(), null);
+    }
+
+    /**
+     * Retrieve paged Deposits
+     * <p>
+     * Receive a list of up to 100 Deposit objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Parameters:
+     * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
+     * <p>
+     * Return:
+     * @return Deposit.Page object with deposits list and cursor
+     * @throws Exception error in the request
+     */
+    public static Page page(User user) throws Exception {
+        return Deposit.page(new HashMap<>(), user);
     }
 
     /**
@@ -287,43 +245,46 @@ public final class Deposit extends Resource {
      * <p>
      * Parameters:
      * @param params parameters of the query
-     * cursor [string, default null]: cursor returned on the previous page function call
-     * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
-     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-     * status [string, default null]: filter for status of retrieved objects. ex: "paid" or "registered"
-     * sort [string, default "-created"]: sort order considered in response. Valid options are "created" or "-created".
-     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
-     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+     * <p>
+     * Return:
+     * @return Deposit.Page object with deposits list and cursor
+     * @throws Exception error in the request
+     */
+    public static Page page(Map<String, Object> params) throws Exception {
+        return Deposit.page(params, null);
+    }
+
+    /**
+     * Retrieve paged Deposits
+     * <p>
+     * Receive a list of up to 100 Deposit objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Parameters:
+     * @param params parameters of the query
      * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
      * <p>
      * Return:
-     * @return Deposit.Page object:
-     * Deposit.Page.deposits: list of Deposit objects with updated attributes
-     * Deposit.Page.cursor: cursor to retrieve the next page of Deposit objects
+     * @return Deposit.Page object with deposits list and cursor
      * @throws Exception error in the request
      */
     public static Page page(Map<String, Object> params, User user) throws Exception {
         com.starkcore.utils.Page page = Rest.getPage(data, params, user);
         List<Deposit> deposits = new ArrayList<>();
-        for (SubResource deposit: page.entities) {
+        for (com.starkcore.utils.SubResource deposit: page.entities)
             deposits.add((Deposit) deposit);
-        }
         return new Page(deposits, page.cursor);
     }
 
     /**
-     * Update notification Deposit entity
-     * <p>
-     * Update the Deposit by passing its id to be partially or fully reversed.
+     * Update Deposit entity
      * <p>
      * Parameters:
-     * @param id        [string]: Deposit unique id. ex: "5656565656565656"
+     * @param id [string]: object unique id
      * @param patchData map of parameters to patch
-     *                  amount [string]: The new amount of the Deposit. If the amount = 0 the Deposit will be fully reversed
      * <p>
      * Return:
-     * @return Deposit object with updated attributes
+     * @return updated Deposit object
      * @throws Exception error in the request
      */
     public static Deposit update(String id, Map<String, Object> patchData) throws Exception {
@@ -331,24 +292,21 @@ public final class Deposit extends Resource {
     }
 
     /**
-     * Update notification Deposit entity
-     * <p>
-     * Update the Deposit by passing its id to be partially or fully reversed.
+     * Update Deposit entity
      * <p>
      * Parameters:
-     * @param id        [string]: Deposit unique id. ex: "5656565656565656"
-     * @param patchData map of properties to patch
-     *                  amount [string]: The new amount of the Deposit. If the amount = 0 the Deposit will be fully reversed
-     * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * @param id [string]: object unique id
+     * @param patchData map of parameters to patch
+     * @param user [Organization/Project object]: Organization or Project object
      * <p>
      * Return:
-     * @return Deposit object with updated attributes
+     * @return updated Deposit object
      * @throws Exception error in the request
      */
     public static Deposit update(String id, Map<String, Object> patchData, User user) throws Exception {
         return Rest.patch(data, id, patchData, user);
     }
-    
+
     public final static class Log extends Resource {
         static ClassData data = new ClassData(Log.class, "DepositLog");
 
@@ -361,16 +319,15 @@ public final class Deposit extends Resource {
          * Deposit Log object
          * <p>
          * Every time a Deposit entity is updated, a corresponding Deposit Log
-         * is generated for the entity. This log is never generated by the
-         * user, but it can be retrieved to check additional information
-         * on the Deposit.
+         * is generated for the entity. This log is never generated by the user,
+         * but it can be retrieved to check additional information on the Deposit.
          * <p>
          * Attributes (return-only):
-         * @param id [string]: unique id returned when the log is created. ex: "5656565656565656"
-         * @param deposit [Deposit]: Deposit entity to which the log refers to.
+         * @param id [string]: unique id returned when the log is created
+         * @param deposit [Deposit]: Deposit entity to which the log refers to
          * @param errors [list of strings]: list of errors linked to this Deposit event
-         * @param type [string]: type of the Deposit event which triggered the log creation. ex: "created" or "credited"
-         * @param created [string]: creation datetime for the log. ex: "2020-03-10 10:30:00.000000+00:00"
+         * @param type [string]: type of the Deposit event which triggered the log creation
+         * @param created [string]: creation datetime for the log
          */
         public Log(String created, String type, String[] errors, Deposit deposit, String id) {
             super(id);
@@ -380,21 +337,19 @@ public final class Deposit extends Resource {
             this.deposit = deposit;
         }
 
-        public Log(){
+        public Log() {
             super(null);
         }
 
         /**
          * Retrieve a specific Deposit Log
          * <p>
-         * Receive a single Deposit Log object previously created by the Stark Bank API by passing its id
-         * <p>
          * Parameters:
-         * @param id [string]: object unique id. ex: "5656565656565656"
+         * @param id [string]: object unique id
          * <p>
          * Return:
          * @return Deposit Log object with updated attributes
-         * @throws Exception error in the request 
+         * @throws Exception error in the request
          */
         public static Log get(String id) throws Exception {
             return Log.get(id, null);
@@ -403,15 +358,13 @@ public final class Deposit extends Resource {
         /**
          * Retrieve a specific Deposit Log
          * <p>
-         * Receive a single Deposit Log object previously created by the Stark Bank API by passing its id
-         * <p>
          * Parameters:
-         * @param id [string]: object unique id. ex: "5656565656565656"
-         * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
+         * @param id [string]: object unique id
+         * @param user [Organization/Project object]: Organization or Project object
          * <p>
          * Return:
          * @return Deposit Log object with updated attributes
-         * @throws Exception error in the request 
+         * @throws Exception error in the request
          */
         public static Log get(String id, User user) throws Exception {
             return Rest.getId(data, id, user);
@@ -420,51 +373,9 @@ public final class Deposit extends Resource {
         /**
          * Retrieve Deposit Logs
          * <p>
-         * Receive a generator of Deposit.Log objects previously created in the Stark Bank API.
-         * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-         * <p>
-         * Parameters:
-         * @param params map of parameters
-         * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
-         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-         * types [list of strings, default null]: filter for log event types. ex: "created" or "credited"
-         * depositIds [list of strings, default null]: list of Deposit ids to filter logs. ex: ["5656565656565656", "4545454545454545"]
-         * <p>
          * Return:
-         * @return list of Deposit Log objects with updated attributes
-         * @throws Exception error in the request 
-         */
-        public static Generator<Log> query(Map<String, Object> params) throws Exception {
-            return Log.query(params, null);
-        }
-
-        /**
-         * Retrieve Deposit Logs
-         * <p>
-         * Receive a generator of Deposit.Log objects previously created in the Stark Bank API.
-         * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-         * <p>
-         * Parameters:
-         * @param user [Project object, default null]: Project object. Not necessary if StarkBank.Settings.user was set before function call
-         * <p>
-         * Return:
-         * @return list of Deposit Log objects with updated attributes
-         * @throws Exception error in the request 
-         */
-        public static Generator<Log> query(User user) throws Exception {
-            return Log.query(new HashMap<>(), user);
-        }
-
-        /**
-         * Retrieve Deposit Logs
-         * <p>
-         * Receive a generator of Deposit.Log objects previously created in the Stark Bank API.
-         * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-         * <p>
-         * Return:
-         * @return list of Deposit Log objects with updated attributes
-         * @throws Exception error in the request 
+         * @return generator of Deposit Log objects with updated attributes
+         * @throws Exception error in the request
          */
         public static Generator<Log> query() throws Exception {
             return Log.query(new HashMap<>(), null);
@@ -473,21 +384,41 @@ public final class Deposit extends Resource {
         /**
          * Retrieve Deposit Logs
          * <p>
-         * Receive a generator of Deposit.Log objects previously created in the Stark Bank API.
-         * Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-         * <p>
          * Parameters:
-         * @param params map of parameters
-         * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
-         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-         * types [list of strings, default null]: filter for log event types. ex: "created" or "credited"
-         * depositIds [list of strings, default null]: list of Deposit ids to filter logs. ex: ["5656565656565656", "4545454545454545"]
-         * @param user [Project object, default null]: Project object. Not necessary if StarkBank.Settings.user was set before function call
+         * @param params parameters of the query
          * <p>
          * Return:
-         * @return list of Deposit Log objects with updated attributes
-         * @throws Exception error in the request 
+         * @return generator of Deposit Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query(Map<String, Object> params) throws Exception {
+            return Log.query(params, null);
+        }
+
+        /**
+         * Retrieve Deposit Logs
+         * <p>
+         * Parameters:
+         * @param user [Organization/Project object]: Organization or Project object
+         * <p>
+         * Return:
+         * @return generator of Deposit Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query(User user) throws Exception {
+            return Log.query(new HashMap<>(), user);
+        }
+
+        /**
+         * Retrieve Deposit Logs
+         * <p>
+         * Parameters:
+         * @param params parameters of the query
+         * @param user [Organization/Project object]: Organization or Project object
+         * <p>
+         * Return:
+         * @return generator of Deposit Log objects with updated attributes
+         * @throws Exception error in the request
          */
         public static Generator<Log> query(Map<String, Object> params, User user) throws Exception {
             return Rest.getStream(data, params, user);
@@ -504,59 +435,10 @@ public final class Deposit extends Resource {
         }
 
         /**
-         * Retrieve paged Deposit.Logs
-         * <p>
-         * Receive a list of up to 100 Deposit.Log objects previously created in the Stark Bank API and the cursor to the next page.
-         * Use this function instead of query if you want to manually page your requests.
-         * <p>
-         * Parameters:
-         * @param params parameters of the query
-         * cursor [string, default null]: cursor returned on the previous page function call
-         * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
-         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-         * types [list of strings, default null]: filter for log event types. ex: "created" or "credited"
-         * depositIds [list of strings, default null]: list of Deposit ids to filter logs. ex: ["5656565656565656", "4545454545454545"]
+         * Retrieve paged Deposit Logs
          * <p>
          * Return:
-         * @return Deposit.Log.Page object:
-         * Deposit.Log.Page.logs: list of Deposit.Log objects with updated attributes
-         * Deposit.Log.Page.cursor: cursor to retrieve the next page of Deposit.Log objects
-         * @throws Exception error in the request
-         */
-        public static Log.Page page(Map<String, Object> params) throws Exception {
-            return Log.page(params, null);
-        }
-
-        /**
-         * Retrieve paged Deposit.Logs
-         * <p>
-         * Receive a list of up to 100 Deposit.Log objects previously created in the Stark Bank API and the cursor to the next page.
-         * Use this function instead of query if you want to manually page your requests.
-         * <p>
-         * Parameters:
-         * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
-         * <p>
-         * Return:
-         * @return Deposit.Log.Page object:
-         * Deposit.Log.Page.logs: list of Deposit.Log objects with updated attributes
-         * Deposit.Log.Page.cursor: cursor to retrieve the next page of Deposit.Log objects
-         * @throws Exception error in the request
-         */
-        public static Log.Page page(User user) throws Exception {
-            return Log.page(new HashMap<>(), user);
-        }
-
-        /**
-         * Retrieve paged Deposit.Logs
-         * <p>
-         * Receive a list of up to 100 Deposit.Log objects previously created in the Stark Bank API and the cursor to the next page.
-         * Use this function instead of query if you want to manually page your requests.
-         * <p>
-         * Return:
-         * @return Deposit.Log.Page object:
-         * Deposit.Log.Page.logs: list of Deposit.Log objects with updated attributes
-         * Deposit.Log.Page.cursor: cursor to retrieve the next page of Deposit.Log objects
+         * @return Deposit.Log.Page object with logs list and cursor
          * @throws Exception error in the request
          */
         public static Log.Page page() throws Exception {
@@ -564,34 +446,51 @@ public final class Deposit extends Resource {
         }
 
         /**
-         * Retrieve paged Deposit.Logs
-         * <p>
-         * Receive a list of up to 100 Deposit.Log objects previously created in the Stark Bank API and the cursor to the next page.
-         * Use this function instead of query if you want to manually page your requests.
+         * Retrieve paged Deposit Logs
          * <p>
          * Parameters:
          * @param params parameters of the query
-         * cursor [string, default null]: cursor returned on the previous page function call
-         * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
-         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
-         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
-         * types [list of strings, default null]: filter for log event types. ex: "created" or "credited"
-         * depositIds [list of strings, default null]: list of Deposit ids to filter logs. ex: ["5656565656565656", "4545454545454545"]
-         * @param user [Organization/Project object]: Organization or Project object. Not necessary if starkbank.User.defaultUser was set before function call
          * <p>
          * Return:
-         * @return Deposit.Log.Page object:
-         * Deposit.Log.Page.logs: list of Deposit.Log objects with updated attributes
-         * Deposit.Log.Page.cursor: cursor to retrieve the next page of Deposit.Log objects
+         * @return Deposit.Log.Page object with logs list and cursor
+         * @throws Exception error in the request
+         */
+        public static Log.Page page(Map<String, Object> params) throws Exception {
+            return Log.page(params, null);
+        }
+
+        /**
+         * Retrieve paged Deposit Logs
+         * <p>
+         * Parameters:
+         * @param user [Organization/Project object]: Organization or Project object
+         * <p>
+         * Return:
+         * @return Deposit.Log.Page object with logs list and cursor
+         * @throws Exception error in the request
+         */
+        public static Log.Page page(User user) throws Exception {
+            return Log.page(new HashMap<>(), user);
+        }
+
+        /**
+         * Retrieve paged Deposit Logs
+         * <p>
+         * Parameters:
+         * @param params parameters of the query
+         * @param user [Organization/Project object]: Organization or Project object
+         * <p>
+         * Return:
+         * @return Deposit.Log.Page object with logs list and cursor
          * @throws Exception error in the request
          */
         public static Log.Page page(Map<String, Object> params, User user) throws Exception {
             com.starkcore.utils.Page page = Rest.getPage(data, params, user);
             List<Log> logs = new ArrayList<>();
-            for (SubResource log: page.entities) {
+            for (com.starkcore.utils.SubResource log: page.entities)
                 logs.add((Log) log);
-            }
-            return new Log.Page(logs, page.cursor);
+            return new Page(logs, page.cursor);
         }
-    }    
+    }
 }
+
