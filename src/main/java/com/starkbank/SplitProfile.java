@@ -4,6 +4,7 @@ package com.starkbank;
 import com.starkbank.utils.Rest;
 import com.starkbank.utils.Resource;
 import com.starkbank.utils.Generator;
+import com.starkcore.utils.SubResource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -239,7 +240,7 @@ public class SplitProfile extends Resource {
     public static Page page(Map<String, Object> params, User user) throws Exception {
         com.starkcore.utils.Page page = Rest.getPage(data, params, user);
         List<SplitProfile> splitProfiles = new ArrayList<>();
-        for (com.starkcore.utils.SubResource splitProfile: page.entities)
+        for (SubResource splitProfile: page.entities)
             splitProfiles.add((SplitProfile) splitProfile);
         return new Page(splitProfiles, page.cursor);
     }
@@ -424,7 +425,7 @@ public class SplitProfile extends Resource {
         public static Log.Page page(Map<String, Object> params, User user) throws Exception {
             com.starkcore.utils.Page page = Rest.getPage(data, params, user);
             List<Log> logs = new ArrayList<>();
-            for (com.starkcore.utils.SubResource log: page.entities)
+            for (SubResource log: page.entities)
                 logs.add((Log) log);
             return new Page(logs, page.cursor);
         }
