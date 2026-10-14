@@ -1034,6 +1034,26 @@ Deposit.Log log = Deposit.Log.get("6532638269505536");
 System.out.println(log);
 ```
 
+## Get a DepositLog pdf
+
+Whenever a Deposit is successfully reversed, a reversed log will be created.
+To retrieve a specific reversal receipt, you can request the corresponding log PDF:
+
+```java
+import com.starkbank.*;
+
+InputStream pdf = Deposit.Log.pdf("6532638269505536");
+java.nio.file.Files.copy(
+    pdf,
+    new File("deposit.pdf").toPath(),
+    StandardCopyOption.REPLACE_EXISTING
+);
+```
+
+Be careful not to accidentally enforce any encoding on the raw pdf content,
+as it may yield abnormal results in the final file, such as missing images
+and strange characters.
+
 
 ## Create boletos
 
@@ -1927,6 +1947,32 @@ DarfPayment.Log log = DarfPayment.Log.get("1902837198237992");
 System.out.println(log);
 ```
 
+## Create VerifiedTransfers
+
+You can send a transfer to a previously verified account by creating a VerifiedTransfer:
+
+```java
+import com.starkbank.*;
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+
+Map<String, Object> data = new HashMap<>();
+data.put("amount", 1000);
+data.put("accountId", "5155165527080960");
+data.put("tags", new String[]{"iron", "suit"});
+
+List<VerifiedTransfer> transfers = new ArrayList<>();
+transfers.add(new VerifiedTransfer(data));
+
+transfers = VerifiedTransfer.create(transfers);
+
+for (VerifiedTransfer transfer : transfers) {
+    System.out.println(transfer);
+}
+```
+
 ## Preview payment information before executing the payment
 
 You can preview multiple types of payment to confirm any information before actually paying.
@@ -2030,6 +2076,7 @@ They support spending rules that will apply to all underlying cards.
 ```java
 import com.starkbank.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -2043,7 +2090,7 @@ rule.put("name", "General USD");
 rule.put("interval", "day");
 rule.put("amount", 100000);
 rule.put("currencyCode", "USD");
-data.put("rules", new CorporateRule[]{new CorporateRule(rule)});
+data.put("rules", Arrays.asList(new CorporateRule(rule)));
 holders.add(new CorporateHolder(data));
 
 holders = CorporateHolder.create(holders);
@@ -2344,9 +2391,8 @@ import java.util.HashMap;
 import java.util.List;
 
 HashMap<String, Object> data = new HashMap<>();
-data.put("amount", 1000);
+data.put("amount", 10000);
 data.put("externalId", "123");
-data.put("description", "Sending back");
 
 CorporateWithdrawal withdrawal = CorporateWithdrawal.create(new CorporateWithdrawal(data));
 
@@ -2458,6 +2504,7 @@ You may also use MerchantCountries to define specific country filters in Corpora
 
 ```java
 import com.starkbank.*;
+import com.starkbank.utils.Generator;
 import java.util.HashMap;
 
 HashMap<String, Object> params = new HashMap<>();
@@ -2641,6 +2688,95 @@ SplitReceiver.Log log = SplitReceiver.Log.get("5155165527080960");
 System.out.println(log);
 ```
 
+## Create or update your SplitProfile
+
+When you create a Split, the entity SplitProfile will be automatically created.
+If you haven't created a Split yet, you can use the "put" function to create your SplitProfile.
+If a SplitProfile already exists for the workspace, this updates its rules instead of creating a new one.
+
+```java
+import com.starkbank.*;
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+
+Map<String, Object> data = new HashMap<>();
+data.put("interval", "week");
+data.put("delay", 604800);
+
+List<SplitProfile> profiles = new ArrayList<>();
+profiles.add(new SplitProfile(data));
+
+profiles = SplitProfile.put(profiles);
+
+for (SplitProfile profile : profiles) {
+    System.out.println(profile);
+}
+```
+
+## Query SplitProfiles
+
+You can get a list of created SplitProfiles given some filters.
+
+```java
+import com.starkbank.*;
+import java.util.Map;
+import java.util.HashMap;
+
+Map<String, Object> params = new HashMap<>();
+params.put("limit", 10);
+
+Generator<SplitProfile> profiles = SplitProfile.query(params);
+
+for (SplitProfile profile : profiles) {
+    System.out.println(profile);
+}
+```
+
+## Get a SplitProfile
+
+To get a single SplitProfile by its id, run:
+
+```java
+import com.starkbank.*;
+
+SplitProfile profile = SplitProfile.get("5155165527080960");
+
+System.out.println(profile);
+```
+
+## Query SplitProfile Logs
+
+You can query SplitProfile Logs to check additional information.
+
+```java
+import com.starkbank.*;
+import java.util.Map;
+import java.util.HashMap;
+
+Map<String, Object> params = new HashMap<>();
+params.put("limit", 10);
+
+Generator<SplitProfile.Log> logs = SplitProfile.Log.query(params);
+
+for (SplitProfile.Log log : logs) {
+    System.out.println(log);
+}
+```
+
+## Get a SplitProfile Log
+
+You can also get a SplitProfile Log by specifying its id.
+
+```java
+import com.starkbank.*;
+
+SplitProfile.Log log = SplitProfile.Log.get("5155165527080960");
+
+System.out.println(log);
+```
+
 ## Merchant Session
 
 The Merchant Session allows you to create a session prior to a purchase.
@@ -2691,29 +2827,9 @@ System.out.println(merchantSession);
 
 Set `confirmationMode` to `"manual"` to create a pre-authorization session: the resulting purchase is approved but only captured once you explicitly confirm it (see [Confirm a MerchantPurchase](#confirm-a-merchantpurchase)). Manual confirmation is available only for credit funding types.
 
-You can create a MerchantPurchase through a MerchantSession by passing its UUID.
-**Note**: This method must be implemented in your front-end to ensure that sensitive card data does not pass through the back-end of the integration.
+With the MerchantSession's UUID, your front-end must send the card data directly to the Stark Bank API through the `POST /v2/merchant-session/:uuid/purchase` route, so that sensitive card data never passes through the back-end of your integration.
 
-### Create a MerchantSession Purchase
-
-```java
-import com.starkbank.*;
-import java.util.Map;
-import java.util.HashMap;
-
-Map<String, Object> purchaseData = new HashMap<>();
-purchaseData.put("amount", 1000L);
-purchaseData.put("cardExpiration", "2035-01");
-purchaseData.put("cardNumber", "36490101441625");
-purchaseData.put("cardSecurityCode", "123");
-purchaseData.put("holderName", "Margaery Tyrell");
-purchaseData.put("fundingType", "credit");
-
-MerchantSession.Purchase purchase = MerchantSession.purchase(
-        merchantSession.uuid, new com.starkbank.MerchantSession.Purchase(purchaseData));
-
-System.out.println(purchase);
-```
+**Note**: `MerchantSession.purchase` is deprecated since v2.27.0 and throws an error when called.
 
 ### Query MerchantSessions
 

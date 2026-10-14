@@ -1,7 +1,5 @@
 package com.starkbank;
 
-import com.starkbank.utils.Generator;
-import com.starkbank.utils.Rest;
 import com.starkcore.utils.SubResource;
 
 import java.util.HashMap;
@@ -12,6 +10,7 @@ public final class BrcodePreview extends SubResource {
     * BrcodePreview object
     * <p>
     * A BrcodePreview is used to get information from a BR Code you received to check the informations before paying it.
+    * BrcodePreview is an actively supported, evolving resource, not deprecated. The backend response also includes endToEndId, payerId, senderFinalName, senderFinalTaxId, amountType, cashierType, cashierBankCode, cashAmount, due, expired, keyId, data, jws and, for Pix Automatico recurring authorizations, a subscription object; those fields are not yet modeled by this class alongside the fields already present.
     * <p>
     * Parameters:
     * status [string]: Payment status. ex: "active", "paid", "canceled" or "unknown"
@@ -128,42 +127,5 @@ public final class BrcodePreview extends SubResource {
     }
 
     public BrcodePreview(){
-    }
-
-    /**
-     * Retrieve BrcodePreviews
-     * <p>
-     * Process BR Codes before creating BrcodePayments
-     * <p>
-     * Parameters:
-     * @param params map of parameters
-     * brcodes [list of strings]: List of BR Codes to preview. ex: ["00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A"]
-     * @param user [Project object, default null]: Project object. Not necessary if StarkBank.Settings.user was set before function call
-     * <p>
-     * Return:
-     * @return generator of BrcodePreview objects with updated attributes
-     * @throws Exception error in the request 
-     */
-    @Deprecated
-    public static Generator<BrcodePreview> query(Map<String, Object> params, User user) throws Exception {
-        return Rest.getSimpleList(data, params, user);
-    }
-
-    /**
-     * Retrieve BrcodePreviews
-     * <p>
-     * Process BR Codes before creating BrcodePayments
-     * <p>
-     * Parameters:
-     * @param params map of parameters
-     * brcodes [list of strings]: List of BR Codes to preview. ex: ["00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A"]
-     * <p>
-     * Return:
-     * @return generator of BrcodePreview objects with updated attributes
-     * @throws Exception error in the request 
-     */
-    @Deprecated
-    public static Generator<BrcodePreview> query(Map<String, Object> params) throws Exception {
-        return Rest.getSimpleList(data, params, null);
     }
 }
