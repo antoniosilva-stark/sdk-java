@@ -1,0 +1,701 @@
+package com.starkbank;
+
+import com.starkbank.utils.Generator;
+import com.starkbank.utils.Resource;
+import com.starkbank.utils.Rest;
+import com.starkcore.utils.SubResource;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+public final class UtilityPayment extends Resource {
+    /**
+     * UtilityPayment object
+     * <p>
+     * When you initialize a UtilityPayment, the entity will not be automatically created in the Stark Bank API. The 'create' function sends the objects to the Stark Bank API and returns the list of created objects.
+     * <p>
+     * Parameters:
+     * line [string]: Number sequence that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34191.09008 63571.277308 71444.640008 5 81960000000062"
+     * barCode [string]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34195819600000000621090063571277307144464000"
+     * description [string]: Text to be displayed in your statement (min. 10 characters). ex: "payment ABC"
+     * scheduled [string]: payment scheduled date. ex: "2020-03-10"
+     * tags [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
+     * id [string]: unique id returned when payment is created. ex: "5656565656565656"
+     * status [string]: current payment status. ex: "success" or "failed"
+     * amount [integer]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
+     * fee [integer]: fee charged when utility payment is created. ex: 200 (= R$ 2.00)
+     * type [string]: payment type. ex: "utility"
+     * transactionIds [list of strings]: ledger transaction ids linked to this UtilityPayment. ex: ["19827356981273"]
+     * created [string]: creation datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     * updated [string]: latest update datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     */
+    static ClassData data = new ClassData(UtilityPayment.class, "UtilityPayment");
+
+    public String line;
+    public String barCode;
+    public String description;
+    public String scheduled;
+    public String[] tags;
+    public String status;
+    public Long amount;
+    public Integer fee;
+    public String type;
+    public String[] transactionIds;
+    public String created;
+    public String updated;
+
+
+    /**
+     * UtilityPayment object
+     * <p>
+     * When you initialize a UtilityPayment, the entity will not be automatically created in the Stark Bank API. The 'create' function sends the objects to the Stark Bank API and returns the list of created objects.
+     * <p>
+     * Parameters:
+     * @param line [string]: Number sequence that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34191.09008 63571.277308 71444.640008 5 81960000000062"
+     * @param barCode [string]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34195819600000000621090063571277307144464000"
+     * @param description [string]: Text to be displayed in your statement (min. 10 characters). ex: "payment ABC"
+     * @param scheduled [string]: payment scheduled date. ex: "2020-03-10"
+     * @param tags [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
+     * @param id [string]: unique id returned when payment is created. ex: "5656565656565656"
+     * @param status [string]: current payment status. ex: "success" or "failed"
+     * @param amount [integer]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
+     * @param fee [integer]: fee charged when utility payment is created. ex: 200 (= R$ 2.00)
+     * @param type [string]: payment type. ex: "utility"
+     * @param transactionIds [list of strings]: ledger transaction ids linked to this UtilityPayment. ex: ["19827356981273"]
+     * @param created [string]: creation datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     * @param updated [string]: latest update datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     */
+    public UtilityPayment(Long amount, String[] tags, String description, String scheduled, String line, String barCode, String id, Integer fee, String type, String[] transactionIds, String status, String created, String updated) {
+        super(id);
+        this.amount = amount;
+        this.tags = tags;
+        this.description = description;
+        this.scheduled = scheduled;
+        this.line = line;
+        this.barCode = barCode;
+        this.fee = fee;
+        this.type = type;
+        this.transactionIds = transactionIds;
+        this.status = status;
+        this.created = created;
+        this.updated = updated;
+    }
+
+    /**
+     * UtilityPayment object
+     * <p>
+     * When you initialize a UtilityPayment, the entity will not be automatically created in the Stark Bank API. The 'create' function sends the objects to the Stark Bank API and returns the list of created objects.
+     * <p>
+     * Parameters:
+     * @param data map of properties for the creation of the UtilityPayment
+     * line [string]: Number sequence that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34191.09008 63571.277308 71444.640008 5 81960000000062"
+     * barCode [string]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34195819600000000621090063571277307144464000"
+     * description [string]: Text to be displayed in your statement (min. 10 characters). ex: "payment ABC"
+     * scheduled [string]: payment scheduled date. ex: "2020-03-10"
+     * tags [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
+     * <p>
+     * Attributes (return-only):
+     * status [string]: current payment status. ex: "success" or "failed"
+     * amount [integer]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
+     * fee [integer]: fee charged when utility payment is created. ex: 200 (= R$ 2.00)
+     * type [string]: payment type. ex: "utility"
+     * transactionIds [list of strings]: ledger transaction ids linked to this UtilityPayment. ex: ["19827356981273"]
+     * created [string]: creation datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     * updated [string]: latest update datetime for the payment. ex: "2020-03-10 10:30:00.000000+00:00"
+     * @throws Exception error in the request
+     */
+    public UtilityPayment(Map<String, Object> data) throws Exception {
+        super(null);
+        HashMap<String, Object> dataCopy = new HashMap<>(data);
+        this.line = (String) dataCopy.remove("line");
+        this.barCode = (String) dataCopy.remove("barCode");
+        this.description = (String) dataCopy.remove("description");
+        this.scheduled = (String) dataCopy.remove("scheduled");
+        this.tags = (String[]) dataCopy.remove("tags");
+        this.status = null;
+        this.amount = null;
+        this.fee = null;
+        this.type = null;
+        this.transactionIds = null;
+        this.created = null;
+        this.updated = null;
+
+        if (!dataCopy.isEmpty()) {
+            throw new Exception("Unknown parameters used in constructor: [" + String.join(", ", dataCopy.keySet()) + "]");
+        }
+    }
+
+    public UtilityPayment() {
+        super(null);
+    }
+
+    /**
+     * Retrieve a specific UtilityPayment
+     * <p>
+     * Receive a single UtilityPayment object previously created by the Stark Bank API by its id
+     * <p>
+     * Parameters:
+     * @param id [string]: object unique id. ex: "5656565656565656"
+     * <p>
+     * Return:
+     * @return UtilityPayment object with updated attributes
+     * @throws Exception error in the request
+     */
+    public static UtilityPayment get(String id) throws Exception {
+        return UtilityPayment.get(id, null);
+    }
+
+    /**
+     * Retrieve a specific UtilityPayment
+     * <p>
+     * Receive a single UtilityPayment object previously created by the Stark Bank API by its id
+     * <p>
+     * Parameters:
+     * @param id [string]: object unique id. ex: "5656565656565656"
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return UtilityPayment object with updated attributes
+     * @throws Exception error in the request
+     */
+    public static UtilityPayment get(String id, User user) throws Exception {
+        return Rest.getId(data, id, user);
+    }
+
+    /**
+     * Retrieve UtilityPayments
+     * <p>
+     * Receive a generator of UtilityPayment objects previously created in the Stark Bank API
+     * <p>
+     * Parameters:
+     * @param params map of parameters for the query
+     * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
+     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
+     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+     * status [string, default null]: filter for status of retrieved objects. ex: "success"
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return generator of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<UtilityPayment> query(Map<String, Object> params, User user) throws Exception {
+        return Rest.getStream(data, params, user);
+    }
+
+    /**
+     * Retrieve UtilityPayments
+     * <p>
+     * Receive a generator of UtilityPayment objects previously created in the Stark Bank API
+     * <p>
+     * Parameters:
+     * @param params map of parameters for the query
+     * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
+     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
+     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+     * status [string, default null]: filter for status of retrieved objects. ex: "success"
+     * <p>
+     * Return:
+     * @return generator of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<UtilityPayment> query(Map<String, Object> params) throws Exception {
+        return UtilityPayment.query(params, null);
+    }
+
+    /**
+     * Retrieve UtilityPayments
+     * <p>
+     * Receive a generator of UtilityPayment objects previously created in the Stark Bank API
+     * <p>
+     * Parameters:
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return generator of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<UtilityPayment> query(User user) throws Exception {
+        return UtilityPayment.query(new HashMap<>(), user);
+    }
+
+    /**
+     * Retrieve UtilityPayments
+     * <p>
+     * Receive a generator of UtilityPayment objects previously created in the Stark Bank API
+     * <p>
+     * Return:
+     * @return generator of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static Generator<UtilityPayment> query() throws Exception {
+        return UtilityPayment.query(new HashMap<>(), null);
+    }
+
+    public final static class Page {
+        public List<UtilityPayment> payments;
+        public String cursor;
+
+        public Page(List<UtilityPayment> payments, String cursor) {
+            this.payments = payments;
+            this.cursor = cursor;
+        }
+    }
+
+    /**
+     * Retrieve paged UtilityPayments
+     * <p>
+     * Receive a list of up to 100 UtilityPayment objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Parameters:
+     * @param params parameters of the query
+     * cursor [string, default null]: cursor returned on the previous page function call
+     * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
+     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
+     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+     * status [string, default null]: filter for status of retrieved objects. ex: "success"
+     * <p>
+     * Return:
+     * @return UtilityPayment.Page object:
+     * UtilityPayment.Page.payments: list of UtilityPayment objects with updated attributes
+     * UtilityPayment.Page.cursor: cursor to retrieve the next page of UtilityPayment objects
+     * @throws Exception error in the request
+     */
+    public static UtilityPayment.Page page(Map<String, Object> params) throws Exception {
+        return UtilityPayment.page(params, null);
+    }
+
+    /**
+     * Retrieve paged UtilityPayments
+     * <p>
+     * Receive a list of up to 100 UtilityPayment objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Parameters:
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return UtilityPayment.Page object:
+     * UtilityPayment.Page.payments: list of UtilityPayment objects with updated attributes
+     * UtilityPayment.Page.cursor: cursor to retrieve the next page of UtilityPayment objects
+     * @throws Exception error in the request
+     */
+    public static Page page(User user) throws Exception {
+        return UtilityPayment.page(new HashMap<>(), user);
+    }
+
+    /**
+     * Retrieve paged UtilityPayments
+     * <p>
+     * Receive a list of up to 100 UtilityPayment objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Return:
+     * @return UtilityPayment.Page object:
+     * UtilityPayment.Page.payments: list of UtilityPayment objects with updated attributes
+     * UtilityPayment.Page.cursor: cursor to retrieve the next page of UtilityPayment objects
+     * @throws Exception error in the request
+     */
+    public static Page page() throws Exception {
+        return UtilityPayment.page(new HashMap<>(), null);
+    }
+
+    /**
+     * Retrieve paged UtilityPayments
+     * <p>
+     * Receive a list of up to 100 UtilityPayment objects previously created in the Stark Bank API and the cursor to the next page.
+     * Use this function instead of query if you want to manually page your requests.
+     * <p>
+     * Parameters:
+     * @param params parameters of the query
+     * cursor [string, default null]: cursor returned on the previous page function call
+     * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
+     * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+     * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+     * tags [list of strings, default null]: tags to filter retrieved objects. ex: ["tony", "stark"]
+     * ids [list of strings, default null]: list of ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+     * status [string, default null]: filter for status of retrieved objects. ex: "success"
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return UtilityPayment.Page object:
+     * UtilityPayment.Page.payments: list of UtilityPayment objects with updated attributes
+     * UtilityPayment.Page.cursor: cursor to retrieve the next page of UtilityPayment objects
+     * @throws Exception error in the request
+     */
+    public static Page page(Map<String, Object> params, User user) throws Exception {
+        com.starkcore.utils.Page page = Rest.getPage(data, params, user);
+        List<UtilityPayment> payments = new ArrayList<>();
+        for (SubResource utilityPayment: page.entities) {
+            payments.add((UtilityPayment) utilityPayment);
+        }
+        return new Page(payments, page.cursor);
+    }
+
+    /**
+     * Create UtilityPayments
+     * <p>
+     * Send a list of UtilityPayment objects for creation in the Stark Bank API
+     * <p>
+     * Parameters:
+     * @param utilityPayments [list of UtilityPayment objects or HashMaps]: list of UtilityPayment objects to be created in the API
+     * <p>
+     * Return:
+     * @return list of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    public static List<UtilityPayment> create(List<?> utilityPayments) throws Exception {
+        return UtilityPayment.create(utilityPayments, null);
+    }
+
+    /**
+     * Create UtilityPayments
+     * <p>
+     * Send a list of UtilityPayment objects for creation in the Stark Bank API
+     * <p>
+     * Parameters:
+     * @param utilityPayments [list of UtilityPayment objects or HashMaps]: list of UtilityPayment objects to be created in the API
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return list of UtilityPayment objects with updated attributes
+     * @throws Exception error in the request
+     */
+    @SuppressWarnings("unchecked")
+    public static List<UtilityPayment> create(List<?> utilityPayments, User user) throws Exception {
+        List<UtilityPayment> utilityPaymentList = new ArrayList<>();
+        for (Object utilityPayment : utilityPayments) {
+            if (utilityPayment instanceof Map) {
+                utilityPaymentList.add(new UtilityPayment((Map<String, Object>) utilityPayment));
+                continue;
+            }
+            if (utilityPayment instanceof UtilityPayment) {
+                utilityPaymentList.add((UtilityPayment) utilityPayment);
+                continue;
+            }
+            throw new Exception("Unknown type \"" + utilityPayment.getClass() + "\", use UtilityPayment or HashMap");
+        }
+        return Rest.post(data, utilityPaymentList, user);
+    }
+
+    /**
+     * Retrieve a specific UtilityPayment pdf file
+     * <p>
+     * Receive a single UtilityPayment pdf file generated in the Stark Bank API by its id.
+     * Only valid for utility payments with "success", "processing" or "created" status.
+     * <p>
+     * Parameters:
+     * @param id [string]: object unique id. ex: "5656565656565656"
+     * <p>
+     * Return:
+     * @return UtilityPayment pdf file
+     * @throws Exception error in the request
+     */
+    public static InputStream pdf(String id) throws Exception {
+        return UtilityPayment.pdf(id, null);
+    }
+
+    /**
+     * Retrieve a specific UtilityPayment pdf file
+     * <p>
+     * Receive a single UtilityPayment pdf file generated in the Stark Bank API by its id.
+     * Only valid for utility payments with "success", "processing" or "created" status.
+     * <p>
+     * Parameters:
+     * @param id [string]: object unique id. ex: "5656565656565656"
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return UtilityPayment pdf file
+     * @throws Exception error in the request
+     */
+    public static InputStream pdf(String id, User user) throws Exception {
+        return Rest.getContent(data, id, "pdf", user, new HashMap<>());
+    }
+
+    /**
+     * Delete an UtilityPayment entity
+     * <p>
+     * Delete a UtilityPayment entity previously created in the Stark Bank API. This only cancels payments that have not yet started processing; payments already processed can still be deleted, but are not reversed.
+     * <p>
+     * Parameters:
+     * @param id [string]: UtilityPayment unique id. ex: "5656565656565656"
+     * <p>
+     * Return:
+     * @return deleted UtilityPayment object
+     * @throws Exception error in the request
+     */
+    public static UtilityPayment delete(String id) throws Exception {
+        return UtilityPayment.delete(id, null);
+    }
+
+    /**
+     * Delete an UtilityPayment entity
+     * <p>
+     * Delete a UtilityPayment entity previously created in the Stark Bank API. This only cancels payments that have not yet started processing; payments already processed can still be deleted, but are not reversed.
+     * <p>
+     * Parameters:
+     * @param id [string]: UtilityPayment unique id. ex: "5656565656565656"
+     * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+     * <p>
+     * Return:
+     * @return deleted UtilityPayment object
+     * @throws Exception error in the request
+     */
+    public static UtilityPayment delete(String id, User user) throws Exception {
+        return Rest.delete(data, id, user);
+    }
+
+    public final static class Log extends Resource {
+        static ClassData data = new ClassData(Log.class, "UtilityPaymentLog");
+
+        public String created;
+        public String type;
+        public String[] errors;
+        public UtilityPayment payment;
+
+        /**
+         * UtilityPayment Log object
+         * <p>
+         * Every time a UtilityPayment entity is updated, a corresponding UtilityPayment Log
+         * is generated for the entity. This log is never generated by the user,
+         * but it can be retrieved to check additional information on the UtilityPayment.
+         * <p>
+         * Attributes (return-only):
+         * @param id [string]: unique id returned when the log is created
+         * @param payment [UtilityPayment]: UtilityPayment entity to which the log refers to
+         * @param errors [list of strings]: list of errors linked to this UtilityPayment event
+         * @param type [string]: type of the UtilityPayment event which triggered the log creation
+         * @param created [string]: creation datetime for the log
+         */
+        public Log(String created, String type, String[] errors, UtilityPayment payment, String id) {
+            super(id);
+            this.created = created;
+            this.type = type;
+            this.errors = errors;
+            this.payment = payment;
+        }
+
+        public Log() {
+            super(null);
+        }
+
+        /**
+         * Retrieve a specific UtilityPayment Log
+         * <p>
+         * Receive a single UtilityPayment Log object previously created by the Stark Bank API by its id
+         * <p>
+         * Parameters:
+         * @param id [string]: object unique id. ex: "5656565656565656"
+         * <p>
+         * Return:
+         * @return UtilityPayment Log object with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Log get(String id) throws Exception {
+            return Log.get(id, null);
+        }
+
+        /**
+         * Retrieve a specific UtilityPayment Log
+         * <p>
+         * Receive a single UtilityPayment Log object previously created by the Stark Bank API by its id
+         * <p>
+         * Parameters:
+         * @param id [string]: object unique id. ex: "5656565656565656"
+         * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+         * <p>
+         * Return:
+         * @return UtilityPayment Log object with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Log get(String id, User user) throws Exception {
+            return Rest.getId(data, id, user);
+        }
+
+        /**
+         * Retrieve UtilityPayment Logs
+         * <p>
+         * Receive a generator of UtilityPayment Log objects previously created in the Stark Bank API
+         * <p>
+         * Parameters:
+         * @param params map of parameters for the query
+         * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
+         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+         * types [list of strings, default null]: filter retrieved objects by event types. ex: "processing" or "success"
+         * paymentIds [list of strings, default null]: list of UtilityPayment ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+         * <p>
+         * Return:
+         * @return generator of UtilityPayment Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query(Map<String, Object> params) throws Exception {
+            return Log.query(params, null);
+        }
+
+        /**
+         * Retrieve UtilityPayment Logs
+         * <p>
+         * Receive a generator of UtilityPayment Log objects previously created in the Stark Bank API
+         * <p>
+         * Parameters:
+         * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+         * <p>
+         * Return:
+         * @return generator of UtilityPayment Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query(User user) throws Exception {
+            return Log.query(new HashMap<>(), user);
+        }
+
+        /**
+         * Retrieve UtilityPayment Logs
+         * <p>
+         * Receive a generator of UtilityPayment Log objects previously created in the Stark Bank API
+         * <p>
+         * Return:
+         * @return generator of UtilityPayment Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query() throws Exception {
+            return Log.query(new HashMap<>(), null);
+        }
+
+        /**
+         * Retrieve UtilityPayment Logs
+         * <p>
+         * Receive a generator of UtilityPayment Log objects previously created in the Stark Bank API
+         * <p>
+         * Parameters:
+         * @param params map of parameters for the query
+         * limit [integer, default null]: maximum number of objects to be retrieved. Unlimited if null. ex: 35
+         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+         * types [list of strings, default null]: filter retrieved objects by event types. ex: "processing" or "success"
+         * paymentIds [list of strings, default null]: list of UtilityPayment ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+         * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+         * <p>
+         * Return:
+         * @return generator of UtilityPayment Log objects with updated attributes
+         * @throws Exception error in the request
+         */
+        public static Generator<Log> query(Map<String, Object> params, User user) throws Exception {
+            return Rest.getStream(data, params, user);
+        }
+
+        public final static class Page {
+            public List<Log> logs;
+            public String cursor;
+
+            public Page(List<Log> logs, String cursor) {
+                this.logs = logs;
+                this.cursor = cursor;
+            }
+        }
+
+        /**
+         * Retrieve paged UtilityPayment.Logs
+         * <p>
+         * Receive a list of up to 100 UtilityPayment Log objects previously created in the Stark Bank API and the cursor to the next page.
+         * Use this function instead of query if you want to manually page your requests.
+         * <p>
+         * Parameters:
+         * @param params parameters of the query
+         * cursor [string, default null]: cursor returned on the previous page function call
+         * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
+         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+         * types [list of strings, default null]: filter retrieved objects by event types. ex: "processing" or "success"
+         * paymentIds [list of strings, default null]: list of UtilityPayment ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+         * <p>
+         * Return:
+         * @return UtilityPayment.Log.Page object:
+         * UtilityPayment.Log.Page.logs: list of UtilityPayment Log objects with updated attributes
+         * UtilityPayment.Log.Page.cursor: cursor to retrieve the next page of UtilityPayment Log objects
+         * @throws Exception error in the request
+         */
+        public static Log.Page page(Map<String, Object> params) throws Exception {
+            return Log.page(params, null);
+        }
+
+        /**
+         * Retrieve paged UtilityPayment.Logs
+         * <p>
+         * Receive a list of up to 100 UtilityPayment Log objects previously created in the Stark Bank API and the cursor to the next page.
+         * Use this function instead of query if you want to manually page your requests.
+         * <p>
+         * Parameters:
+         * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+         * <p>
+         * Return:
+         * @return UtilityPayment.Log.Page object:
+         * UtilityPayment.Log.Page.logs: list of UtilityPayment Log objects with updated attributes
+         * UtilityPayment.Log.Page.cursor: cursor to retrieve the next page of UtilityPayment Log objects
+         * @throws Exception error in the request
+         */
+        public static Log.Page page(User user) throws Exception {
+            return Log.page(new HashMap<>(), user);
+        }
+
+        /**
+         * Retrieve paged UtilityPayment.Logs
+         * <p>
+         * Receive a list of up to 100 UtilityPayment Log objects previously created in the Stark Bank API and the cursor to the next page.
+         * Use this function instead of query if you want to manually page your requests.
+         * <p>
+         * Return:
+         * @return UtilityPayment.Log.Page object:
+         * UtilityPayment.Log.Page.logs: list of UtilityPayment Log objects with updated attributes
+         * UtilityPayment.Log.Page.cursor: cursor to retrieve the next page of UtilityPayment Log objects
+         * @throws Exception error in the request
+         */
+        public static Log.Page page() throws Exception {
+            return Log.page(new HashMap<>(), null);
+        }
+
+        /**
+         * Retrieve paged UtilityPayment.Logs
+         * <p>
+         * Receive a list of up to 100 UtilityPayment Log objects previously created in the Stark Bank API and the cursor to the next page.
+         * Use this function instead of query if you want to manually page your requests.
+         * <p>
+         * Parameters:
+         * @param params parameters of the query
+         * cursor [string, default null]: cursor returned on the previous page function call
+         * limit [integer, default 100]: maximum number of objects to be retrieved. It must be an integer between 1 and 100. ex: 50
+         * after [string, default null] date filter for objects created only after specified date. ex: "2020-03-10"
+         * before [string, default null] date filter for objects created only before specified date. ex: "2020-03-10"
+         * types [list of strings, default null]: filter retrieved objects by event types. ex: "processing" or "success"
+         * paymentIds [list of strings, default null]: list of UtilityPayment ids to filter retrieved objects. ex: ["5656565656565656", "4545454545454545"]
+         * @param user [Organization/Project object, default null]: Organization or Project object. Not necessary if starkbank.Settings.user was set before function call
+         * <p>
+         * Return:
+         * @return UtilityPayment.Log.Page object:
+         * UtilityPayment.Log.Page.logs: list of UtilityPayment Log objects with updated attributes
+         * UtilityPayment.Log.Page.cursor: cursor to retrieve the next page of UtilityPayment Log objects
+         * @throws Exception error in the request
+         */
+        public static Log.Page page(Map<String, Object> params, User user) throws Exception {
+            com.starkcore.utils.Page page = Rest.getPage(data, params, user);
+            List<Log> logs = new ArrayList<>();
+            for (SubResource log: page.entities) {
+                logs.add((Log) log);
+            }
+            return new Log.Page(logs, page.cursor);
+        }
+    }
+}
+
