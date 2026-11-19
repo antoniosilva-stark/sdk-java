@@ -17,7 +17,6 @@ public final class MerchantCountry extends SubResource {
      * Parameters:
      * code [string]: country's code. ex: "BRA"
      * name [string]: country's name. ex: "Brazil"
-     * number [string]: country's number. ex: "076"
      * shortCode [string]: country's short code. ex: "BR"
      */
     static SubResource.ClassData data = new SubResource.ClassData(MerchantCountry.class, "MerchantCountry");
