@@ -110,5 +110,8 @@ public final class Balance extends Resource {
     public static Balance get() throws Exception {
         return Balance.get(null);
     }
-}
 
+    public static String onlyInProduction() {
+        return null;
+    }
+}
